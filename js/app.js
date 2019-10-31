@@ -10,7 +10,7 @@ const addExpenseBtn = document.querySelector('#addExpense');
 //query select the data to display the results
 const expensesList = document.querySelector('.expenseCollection');
 let budgetValueDisplay = document.querySelector('#budgetValue');
-let balanceValueDisplay = document.querySelector("#balanceValue");
+let balanceValueDisplay = document.querySelector('#balanceValue');
 
 //our running total for our budget
 let totalFunds = 0;
@@ -20,9 +20,7 @@ let itemId = 0;
 loadEventListeners();
 
 function loadEventListeners() {
-  //add a click event listener for the calculate button that triggers a createBudget function
   calculateBtn.addEventListener('click', createBudget);
-  //add a click event listener for the add expense button that triggers an addExpense function
   addExpenseBtn.addEventListener('click', addExpense);
 }
 
@@ -33,27 +31,38 @@ function createBudget(event) {
 }
 
 function addExpense(event) {
-const expense = {
-id: itemId,
-name: expenseTitleInput.value,
-amount: expenseValueInput.value
-};
-console.log(expense);
+  let expense = {
+    id: itemId,
+    title: expenseTitleInput.value,
+    amount: expenseValueInput.value
+  };
 
-  //dynamically create the list and take away from the budget
-  const expenseLi = document.createElement('li')
-  expenseLi.className = "expenseLi";
+  totalFunds -= expense.amount;
+  console.log(totalFunds);
+
+  const expenseLi = document.createElement('li');
+  expenseLi.className = 'expenseLi';
   expenseLi.innerHTML = `
-  <p>${expense.name}</p>
+  <p>${expense.title}</p>
   <p>:</p>
-  <p>${expense.amount}</p>
-  `
-expensesList.appendChild(expenseLi)
+  <p id= ${expense.id}>${expense.amount}</p>
+  `;
 
-balanceValueDisplay.innerText = totalFunds -= expense.amount;
-  //create a remove button and once an item is deleted from the list it is added back to the budget
-  
-  
+  const removeButton = document.createElement('a');
+  removeButton.className = 'fa fa-trash';
+  expenseLi.appendChild(removeButton);
+  expensesList.appendChild(expenseLi);
+
+  removeButton.addEventListener('click', () => {
+    const amtToAdd = document.getElementById(expense.id).innerText;
+    const amtToAddValue = parseInt(amtToAdd);
+    totalFunds += amtToAddValue;
+    expensesList.removeChild(expenseLi);
+    balanceValueDisplay.innerText = totalFunds;
+  });
+
+  balanceValueDisplay.innerText = totalFunds;
+
   itemId++;
   expenseTitleInput.value = '';
   expenseValueInput.value = '';
