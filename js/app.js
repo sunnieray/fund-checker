@@ -44,7 +44,7 @@ console.log(expense);
   const expenseLi = document.createElement('li')
   expenseLi.className = "expenseLi";
   expenseLi.innerHTML = `
-  <p>${expense.title}</p>
+  <p>${expense.name}</p>
   <p>:</p>
   <p>${expense.amount}</p>
   `
